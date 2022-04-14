@@ -1,0 +1,41 @@
+﻿@model RegisterVM
+@{
+    ViewData["Title"] = "Register";
+}
+
+<form method="post">
+    <div class="login-form col-lg-6 mx-auto">
+        <h4 class="login-title">New Customer</h4>
+        <p><span class="font-weight-bold">I am a new customer</span></p>
+        <div class="row">
+            <div class="col-md-12 col-12 mb--15 ">
+                <label asp-for="Name"></label>
+                <input class="mb-0 form-control" asp-for="Name" placeholder="Enter your full name">
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="col-12 mb--20">
+                <label asp-for="Email"></label>
+                <input class="mb-0 form-control" asp-for="Email" placeholder="Enter Your Email Address Here..">
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="col-lg-12 mb--20">
+                <label asp-for="Password"></label>
+                <input class="mb-0 form-control" asp-for="Password" placeholder="Enter your Password">
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="col-lg-12 mb--20">
+                <label asp-for="ConfirmPassword"></label>
+                <input class="mb-0 form-control" asp-for="ConfirmPassword" placeholder="Repeat your ConfirmPassword">
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-primary mt--30">Register</button>
+            </div>
+            <div asp-validation-summary="ModelOnly"></div>
+        </div>
+    </div>
+</form>
+@section Script{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+}

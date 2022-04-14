@@ -39,31 +39,46 @@ namespace WebApplication1.Controllers
             Product product = await _context.Products.FirstOrDefaultAsync(p=>p.Id == id);
             if (product == null) return NotFound();
 
+            BasketVM basketVM = new BasketVM()
+            {
+                Id = product.Id,
+                Count = 1
+            };
+            List<BasketVM> basketVMs = new List<BasketVM>();
+
             List<Product> products = new List<Product>();
             string cookie = HttpContext.Request.Cookies["basket"];
 
             if (cookie == null)
             {
-                products.Add(product);
+                basketVMs.Add(basketVM);
             }
             else
             {
-                products = JsonConvert.DeserializeObject<List<Product>>(cookie);
-                products.Add(product);
+                basketVMs = JsonConvert.DeserializeObject<List<BasketVM>>(cookie);
+                if(basketVMs.Any(p=>p.Id == basketVM.Id))
+                {
+                    basketVMs.FirstOrDefault(b => b.Id == basketVM.Id).Count += 1;
+                }
+                else
+                {
+                    basketVMs.Add(basketVM);
+                }
             }
 
-            string myProduct = JsonConvert.SerializeObject(products);
+            string myProduct = JsonConvert.SerializeObject(basketVMs);
             HttpContext.Response.Cookies.Append("basket", myProduct);
 
-            foreach (Product item in products)
+            foreach (BasketVM item in basketVMs)
             {
                 item.CategoryId = _context.Products.Include(p => p.Category).FirstOrDefault(p => p.Id == item.Id).Category.Id;
                 item.Image = _context.Products.FirstOrDefault(p => p.Id == item.Id).Image;
                 item.Name = _context.Products.FirstOrDefault(p => p.Id == item.Id).Name;
                 item.Price = _context.Products.FirstOrDefault(p => p.Id == item.Id).Price;
                 item.Category = _context.Products.Include(p => p.Category).FirstOrDefault(p => p.Id == item.Id).Category;
+                item.Count = basketVMs.FirstOrDefault(b => b.Id == item.Id).Count;
             }
-            return PartialView("_BasketTablePartial", products);
+            return PartialView("_BasketTablePartial", basketVMs);
         }
     }
 }

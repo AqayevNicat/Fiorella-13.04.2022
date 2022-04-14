@@ -9,6 +9,7 @@ namespace WebApplication1.Models
     public class Product
     {
         public int Id { get; set; }
+        public int Count { get; set; }
         public int CategoryId { get; set; }
         [StringLength(255)]
         public string Image { get; set; }

@@ -165,6 +165,12 @@
                                         <li class="">No products in the cart.</li>
                                     </ul>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-action="Login" asp-controller="Account">Login</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-action="Register" asp-controller="Account">Register</a>
+                                </li>
                             </ul>
                         </div>
 
@@ -390,6 +396,7 @@
     <script src="~/owlcarousel/owl.carousel.min.js"></script>
     <script src="~/js/script.js"></script>
     <script src="~/js/main.js"></script>
+    @RenderSection("Script", required: false);
 </body>
 
 </html>

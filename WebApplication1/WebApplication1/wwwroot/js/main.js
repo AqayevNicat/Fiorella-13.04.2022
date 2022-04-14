@@ -16,4 +16,8 @@
             console.log(data);
         })
     })
+    $(".item-count .up").click(function (e) {
+        e.preventDefault();
+        count = $(this).next()
+    })
 })

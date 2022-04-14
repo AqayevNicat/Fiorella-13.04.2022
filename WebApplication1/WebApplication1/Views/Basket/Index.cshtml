@@ -1,4 +1,4 @@
-﻿@model List<Product>
+﻿@model List<BasketVM>
 <main>
     <section id="product-list-title">
         <div class="container py-4">
@@ -40,7 +40,7 @@
                                         </tr>
                                     </thead>
                                     <tbody class="cart-body">
-                                        @*@await Html.PartialAsync("_BasketTablePartial", Model)*@
+                                        @await Html.PartialAsync("_BasketTablePartial", Model)
                                     </tbody>
                                 </table>
                                 <hr style="margin-top: 50px;">
@@ -92,7 +92,15 @@
                                                     <h6>Total</h6>
                                                 </td>
                                                 <td class="text-right">
-                                                    <h4>$ <span class="total-price-s">12.31</span></h4>
+                                                    @{ 
+                                                        double total = 0;
+                                                        foreach (BasketVM item in Model)
+                                                        {
+                                                            total += (item.Count * item.Price);
+                                                        }
+
+                                                    }
+                                                    <h4>$ <span class="total-price-s">@total</span></h4>
                                                 </td>
                                             </tr>
                                         </tbody>

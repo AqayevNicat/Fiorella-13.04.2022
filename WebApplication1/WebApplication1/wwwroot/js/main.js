@@ -1,10 +1,19 @@
 ﻿$(document).ready(function () {
     $(".addToBasket").click(function (e) {
         e.preventDefault();
-        fetch($(this).attr("href")).then(res => {
-            return res.text();
+        let url = $(this).attr("href");
+
+        fetch(url).then(res => {
+            if (res.ok) {
+                alert("oldu");
+                return res.text();
+            }
+            else {
+                alert("olmadi");
+            }
         }).then(data => {
-            $(".products").html(data);
+            $(".cart-table .cart-body").html(data);
+            console.log(data);
         })
     })
 })

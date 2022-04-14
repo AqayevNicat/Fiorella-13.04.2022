@@ -33,25 +33,37 @@ namespace WebApplication1.Controllers
 
             return View(homeVM);
         }
-        public IActionResult AddToCookie(int? id)
+        public async Task<IActionResult> AddToCookie(int? id)
         {
             if (id == null) return BadRequest();
-            Product product = _context.Products.FirstOrDefault(p=>p.Id == id);
+            Product product = await _context.Products.FirstOrDefaultAsync(p=>p.Id == id);
             if (product == null) return NotFound();
 
-            string myProduct = JsonConvert.SerializeObject(product);
+            List<Product> products = new List<Product>();
+            string cookie = HttpContext.Request.Cookies["basket"];
 
-            HttpContext.Response.Cookies.Append(product.Id.ToString(), myProduct);
-
-
-            HomeVM homeVM = new HomeVM
+            if (cookie == null)
             {
-                Slider = _context.Sliders.ToList(),
-                Category = _context.Categories.ToList(),
-                Product = _context.Products.Include(p => p.Category).ToList()
-            };
+                products.Add(product);
+            }
+            else
+            {
+                products = JsonConvert.DeserializeObject<List<Product>>(cookie);
+                products.Add(product);
+            }
 
-            return RedirectToAction("Index");
+            string myProduct = JsonConvert.SerializeObject(products);
+            HttpContext.Response.Cookies.Append("basket", myProduct);
+
+            foreach (Product item in products)
+            {
+                item.CategoryId = _context.Products.Include(p => p.Category).FirstOrDefault(p => p.Id == item.Id).Category.Id;
+                item.Image = _context.Products.FirstOrDefault(p => p.Id == item.Id).Image;
+                item.Name = _context.Products.FirstOrDefault(p => p.Id == item.Id).Name;
+                item.Price = _context.Products.FirstOrDefault(p => p.Id == item.Id).Price;
+                item.Category = _context.Products.Include(p => p.Category).FirstOrDefault(p => p.Id == item.Id).Category;
+            }
+            return PartialView("_BasketTablePartial", products);
         }
     }
 }
